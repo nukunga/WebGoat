@@ -20,4 +20,4 @@ artifacts:
     - target/webgoat-2023.6-SNAPSHOT.jar
     - appspec.yml
     - start.sh
-  name: webGoat_build
+  name: webGoat_build-$(date +%Y-%m-%d)
