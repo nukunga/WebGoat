@@ -17,8 +17,7 @@ phases:
       - chmod -R 775 $CODEBUILD_SRC_DIR/dependency-check/bin/dependency-check.sh
       - echo "stage pre_build completed"
       # s3에서 빌드된 프로젝트를 가져오는 코드
-      - aws s3 cp s3://codebuild-artifact-output-s3/output/webgoat-2023.6-SNAPSHOT.jar ./
-      - aws s3 cp s3://codebuild-artifact-output-s3/output/buildspec_owasp_dependency_check.yml ./
+      - aws s3 cp s3://codebuild-artifact-output-s3/output/webgoat-2023.6-SNAPSHOT.jar $CODEBUILD_SRC_DIR
   build:
     commands: 
       - cd dependency-check/bin
