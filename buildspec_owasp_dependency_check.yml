@@ -1,5 +1,9 @@
 version: 0.2
 phases:
+  source:
+    type: S3
+    location: s3://codebuild-artifact-output-s3/output/
+    buildspec: buildspec_owasp_dependency_check.yml
   install:
     commands:
       - echo "install phase....."
