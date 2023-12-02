@@ -1,9 +1,5 @@
 version: 0.2
 phases:
-  source:
-    type: S3
-    location: s3://codebuild-artifact-output-s3/output/
-    buildspec: buildspec_owasp_dependency_check.yml
   install:
     commands:
       - echo "install phase....."
@@ -17,11 +13,11 @@ phases:
       - chmod -R 775 $CODEBUILD_SRC_DIR/dependency-check/bin/dependency-check.sh
       - echo "stage pre_build completed"
       # s3에서 빌드된 프로젝트를 가져오는 코드
-      - aws s3 cp s3://codebuild-artifact-output-s3/output/webgoat-2023.6-SNAPSHOT.jar $CODEBUILD_SRC_DIR
+      #- aws s3 cp s3://codebuild-artifact-output-s3/output/webgoat-2023.6-SNAPSHOT.jar $CODEBUILD_SRC_DIR
   build:
     commands: 
       - cd dependency-check/bin
-      - $CODEBUILD_SRC_DIR/dependency-check/bin/dependency-check.sh --project "webgoat-2023.6-SNAPSHOT.jar" --format JSON --prettyPrint --enableExperimental --scan $CODEBUILD_SRC_DIR --exclude '$CODEBUILD_SRC_DIR/depedency-check/'
+      - $CODEBUILD_SRC_DIR/dependency-check/bin/dependency-check.sh --project "webgoat" --format JSON --prettyPrint --enableExperimental --scan $CODEBUILD_SRC_DIR --exclude '$CODEBUILD_SRC_DIR/depedency-check/'
       # --project "target/webgoat-2023.6-SNAPSHOT.jar"는 검사할 프로젝트의 이름 
       - echo "OWASP dependency check analysis status is completed..."; 
       - high_risk_dependency=$( cat dependency-check-report.json | grep -c "HIGHEST" )
