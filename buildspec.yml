@@ -19,7 +19,7 @@ phases:
       - aws s3 cp buildspec_owasp_dependency_check.yml s3://codebuild-artifact-output-s3/output/
 artifacts:
   files:
-    - target/webgoat-2023.6-SNAPSHOT.jar
+    - target/*.jar
     - appspec.yml
     - start.sh
   name: webGoat_build-$(date +%Y-%m-%d)

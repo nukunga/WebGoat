@@ -30,7 +30,7 @@ phases:
         \"source_commitid\": env.CODEBUILD_RESOLVED_SOURCE_VERSION, \
         \"report\": . }" dependency-check-report.json > payload.json
       - |
-        if [ $high_risk_dependency -gt 0 ]; then
+        if [[ $high_risk_dependency -gt 0 ]]; then
           echo "there are high or medium alerts.. failing the build"
           exit 1; 
         fi
