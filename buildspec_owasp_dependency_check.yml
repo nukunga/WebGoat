@@ -22,6 +22,7 @@ phases:
       - high_risk_dependency=$( cat dependency-check-report.json | grep -c "HIGHEST" )
   post_build:
     commands:
+      - echo "High risk dependency count: $high_risk_dependency" 
       - | 
         jq "{ \"messageType\": \"CodeScanReport\", \"reportType\": \"OWASP-Dependency-Check\", \
         \"createdAt\": $(date +\"%Y-%m-%dT%H:%M:%S.%3NZ\"), \"source_repository\": env.CODEBUILD_SOURCE_REPO_URL, \
