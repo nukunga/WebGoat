@@ -28,4 +28,4 @@ echo "> MONGO_URL:"
 echo "$MONGO_URL"
 echo "> run DEPLOY_JAR"    >> /home/ubuntu/deploy.log
 
-nohup java -jar "$DEPLOY_JAR" --server.port=8080 --server.address=13.125.55.184
+nohup java -jar "$DEPLOY_JAR" --server.port=8080 --server.address=13.125.55.184 &
