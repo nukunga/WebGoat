@@ -15,8 +15,8 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - aws s3 cp target/webgoat-2023.6-SNAPSHOT.jar s3://codebuild-artifact-output-s3/output/
-      - aws s3 cp buildspec_owasp_dependency_check.yml s3://codebuild-artifact-output-s3/output/
+      #- aws s3 cp target/webgoat-2023.6-SNAPSHOT.jar s3://codebuild-artifact-output-s3/output/
+      #- aws s3 cp buildspec_owasp_dependency_check.yml s3://codebuild-artifact-output-s3/output/
 artifacts:
   files:
     - target/*.jar
