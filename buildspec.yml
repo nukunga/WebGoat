@@ -21,6 +21,6 @@ artifacts:
   files:
     - target/*.jar
     - appspec.yml
-    - start.sh
+    - script/start.sh
     - buildspec_owasp_dependency_check.yml
-  name: webGoat_build-$(date +%Y-%m-%d)
+  name: webGoat_build
