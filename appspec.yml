@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source:  /
-    destination: /home/ubuntu/server/
+    destination: server/
     overwrite: yes
 
 permissions:
@@ -13,6 +13,6 @@ permissions:
 
 hooks:
   ApplicationStart:
-    - location: /home/ubuntu/server/script/start.sh
+    - location: server/script/start.sh
       timeout: 60
       runas: root
