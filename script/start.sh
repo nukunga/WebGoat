@@ -1,6 +1,6 @@
 #!/bin/bash
 #cd /home/ubuntu/server/target/
-#java -jar webgoat-2023.6-SNAPSHOT.jar --server.port=8080 --server.address=52.78.138.74 
+#java -jar webgoat-2023.6-SNAPSHOT.jar --server.port=8080 --server.address=13.125.55.184 
 
 
 BUILD_JAR=$(ls /home/ubuntu/server/target/*.jar)
@@ -28,4 +28,4 @@ echo "> MONGO_URL:"
 echo "$MONGO_URL"
 echo "> run DEPLOY_JAR"    >> /home/ubuntu/deploy.log
 
-nohup java -jar "$DEPLOY_JAR" --server.port=8080 --server.address=52.78.138.74
+nohup java -jar "$DEPLOY_JAR" --server.port=8080 --server.address=13.125.55.184
