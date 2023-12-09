@@ -11,6 +11,7 @@ phases:
     commands:
       - echo Build started on `date`
       - pwd && ls && whoami
+      - mvn spotless:apply
       - ./mvnw clean install
   post_build:
     commands:
@@ -23,4 +24,3 @@ artifacts:
     - appspec.yml
     - script/start.sh
     - buildspec_owasp_dependency_check.yml
-  name: webGoat_build
