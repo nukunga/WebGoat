@@ -41,4 +41,3 @@ artifacts:
 
   # aws lambda invoke --function-name ImportVulToSecurityHub --payload file://payload.json dependency-check-report.json && echo "LAMBDA_SUCCEDED" || echo "LAMBDA_FAILED";
   # 위 코드는 lamda 함수 구현 시 exit 1; 위에 추가할 것 
-  
