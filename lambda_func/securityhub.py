@@ -56,4 +56,3 @@ def import_finding_to_sh(count: int, account_id: str, region: str, created_at: s
     if response['FailedCount'] > 0:
         logger.error("Error importing finding: " + response)
         raise Exception("Failed to import finding: {}".format(response['FailedCount']))
-    
