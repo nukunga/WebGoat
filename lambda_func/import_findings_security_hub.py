@@ -143,3 +143,4 @@ def lambda_handler(event, context):
     except Exception as error:
         logger.error("Error {}".format(error))
         raise
+    
