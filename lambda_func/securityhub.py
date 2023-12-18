@@ -1,3 +1,8 @@
+"""
+ AWS Security Hub Integration
+ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ SPDX-License-Identifier: MIT-0
+"""
 import sys
 import logging
 sys.path.insert(0, "external")
@@ -16,7 +21,7 @@ def import_finding_to_sh(count: int, account_id: str, region: str, created_at: s
     new_findings.append({
         "SchemaVersion": "2018-10-08",
         "Id": finding_id,
-        "ProductArn": "arn:aws-ap-northeast-2:securityhub:{0}:{1}:product/{1}/default".format(region, account_id),
+        "ProductArn": "arn:aws:securityhub:{0}:{1}:product/{1}/default".format(region, account_id),
         "GeneratorId": generator_id,
         "AwsAccountId": account_id,
         "Types": [
