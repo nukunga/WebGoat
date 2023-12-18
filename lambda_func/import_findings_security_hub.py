@@ -44,20 +44,24 @@ def process_message(event):
         ### OWASP SCA scanning report parsing
         if event['reportType'] == 'OWASP-Dependency-Check':
             severity = 50
-            FINDING_TITLE = "OWASP Dependecy Check Analysis"
-            dep_pkgs = len(event['report']['dependencies'])
+            FINDING_TITLE = "OWASP Dependency Check Analysis"
+            decoded_data = base64.b64decode(event)
+            decoded_event = json.loads(decoded_data)
+
+            dep_pkgs = len(decoded_event['report']['dependencies'])
             for i in range(dep_pkgs):
-                if "packages" in event['report']['dependencies'][i]:
-                    confidence = event['report']['dependencies'][i]['packages'][0]['confidence']
-                    url = event['report']['dependencies'][i]['packages'][0]['url']
+                if "packages" in decoded_event['report']['dependencies'][i]:
+                    confidence = decoded_event['report']['dependencies'][i]['packages'][0]['confidence']
+                    url = decoded_event['report']['dependencies'][i]['packages'][0]['url']
                     finding_id = f"{i}-{report_type.lower()}-{build_id}"
-                    finding_description = f"Package: {event['report']['dependencies'][i]['packages'][0]['id']}, Confidence: {confidence}, URL: {url}"
+                    finding_description = f"Package: {decoded_event['report']['dependencies'][i]['packages'][0]['id']}, Confidence: {confidence}, URL: {url}"
                     created_at = datetime.now(timezone.utc).isoformat()
-                    ### find the vulnerability severity level
+
                     if confidence == "HIGHEST":
                         normalized_severity = 80
                     else:
                         normalized_severity = 50
+
                     securityhub.import_finding_to_sh(i, account_id, region, created_at, source_repository, source_branch, source_commitid, build_id, report_url, finding_id, generator_id, normalized_severity, severity, finding_type, FINDING_TITLE, finding_description, BEST_PRACTICES_OWASP)
 
         ### PHPStan SAST scanning report parsing
