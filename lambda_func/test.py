@@ -1,5 +1,6 @@
 import os
 import json
+import boto3
 import base64
 import logging
 from datetime import datetime, timezone
@@ -15,28 +16,29 @@ BEST_PRACTICES_OWASP = "https://owasp.org/www-project-top-ten/"
 report_url = "https://aws.amazon.com"
 
 def process_message(event):
-    try:
-        # 'body' 키를 사용하여 데이터를 가져오고, base64 디코딩 및 utf-8 디코딩 수행
-        encoded_payload = event['body']
-        decoded_payload = base64.b64decode(encoded_payload)
-        logger.info("execute success")
-        
-    except Exception as e:
-        # 오류가 발생한 경우 처리
-        logger.info("execute fail")
-        logger.error("Error {}".format(e))
+    if event['messageType'] == 'CodeScanReport':
+        account_id = boto3.client('sts').get_caller_identity().get('Account')
+        region = os.environ['AWS_REGION']
+        created_at = event['createdAt']
+        source_repository = event['source_repository']
+        source_branch = event['source_branch']
+        source_commitid = event['source_commitid']
+        build_id = event['build_id']
+        report_type = event['reportType']
+        finding_type = FINDING_TYPE_TEMPLATE.format(report_type)
+        generator_id = f"{report_type.lower()}-{source_repository}-{source_branch}"
     
-    if decoded_payload and decoded_payload.get('reportType') == 'OWASP-Dependency-Check':
+    if event and event.get('reportType') == 'OWASP-Dependency-Check':
         logger.info("success sca test report parsing")
         severity = 50
         FINDING_TITLE = "OWASP Dependency Check Analysis"
-        dep_pkgs = len(decoded_payload['report']['dependencies'])
+        dep_pkgs = len(event['report']['dependencies'])
         for i in range(dep_pkgs):
-            if "packages" in decoded_payload['report']['dependencies'][i]:
-                confidence = decoded_payload['report']['dependencies'][i]['packages'][0]['confidence']
-                url = decoded_payload['report']['dependencies'][i]['packages'][0]['url']
+            if "packages" in event['report']['dependencies'][i]:
+                confidence = event['report']['dependencies'][i]['packages'][0]['confidence']
+                url = event['report']['dependencies'][i]['packages'][0]['url']
                 finding_id = f"{i}-{report_type.lower()}-{build_id}"
-                finding_description = f"Package: {decoded_payload['report']['dependencies'][i]['packages'][0]['id']}, Confidence: {confidence}, URL: {url}"
+                finding_description = f"Package: {event['report']['dependencies'][i]['packages'][0]['id']}, Confidence: {confidence}, URL: {url}"
                 created_at = datetime.now(timezone.utc).isoformat()
 
                 if confidence == "HIGHEST":
