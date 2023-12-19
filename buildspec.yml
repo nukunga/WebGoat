@@ -21,6 +21,5 @@ phases:
 artifacts:
   files:
     - target/*.jar
-    - appspec.yml
     - script/start.sh
-    - buildspec_owasp_dependency_check.yml
+    - *.yml
