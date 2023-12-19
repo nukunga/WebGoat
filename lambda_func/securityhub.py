@@ -41,7 +41,7 @@ def import_finding_to_sh(count: int, account_id: str, region: str, created_at: s
                 'Url': best_practices_cfn
             }
         },
-        'SourceUrl': report_url,
+        'SourceUrl': source_repository,
         'Resources': [
             {
                 'Id': build_id,
