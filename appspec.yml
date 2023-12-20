@@ -15,3 +15,4 @@ hooks:
   ApplicationStart:
     - location: script/start.sh
       runas: ubuntu
+      
