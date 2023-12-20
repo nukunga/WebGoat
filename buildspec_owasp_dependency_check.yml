@@ -32,11 +32,11 @@ phases:
         \"report\": . }" dependency-check-report.json > payload.json
       - base64 -w 0 payload.json > payload_base64.txt
       - pwd && ls && whoami
-      #- |
-      #  if [[ $high_risk_dependency -gt 0 ]]; then
-      #    echo "there are high or medium alerts.. failing the build"
-      #    aws lambda invoke --function-name ImportVulToSecurityHub --payload file://payload_base64.txt dependency-check-report.json && echo "LAMBDA_SUCCEEDED" || echo "LAMBDA_FAILED"
-      #    exit 1; 
-      #  fi
+      - |
+        if [[ $high_risk_dependency -gt 0 ]]; then
+          echo "there are high or medium alerts.. failing the build"
+          aws lambda invoke --function-name ImportVulToSecurityHub --payload file://payload_base64.txt dependency-check-report.json && echo "LAMBDA_SUCCEEDED" || echo "LAMBDA_FAILED"
+          exit 1; 
+        fi
 artifacts:
   files: $CODEBUILD_SRC_DIR/dependency-check/bin/*.json
