@@ -6,6 +6,7 @@ phases:
       - echo "install phase....."
   pre_build:
     commands:
+      - pwd && ls && whoami
       - wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.3/dependency-check-8.4.3-release.zip
       # owasp-dependency-check v8.4.3
       - unzip dependency-check-8.4.3-release.zip
