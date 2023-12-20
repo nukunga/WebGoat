@@ -22,5 +22,7 @@ artifacts:
   files:
     - target/*.jar
     - script/start.sh
-    - /*.yml
+    - appsepc.yml
+    - buildspec_owasp_dependency_check.yml
+    - buildspec_sonarqube.yml
     
