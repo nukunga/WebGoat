@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       - echo Start code scan...
-      - ./../../../../../../../tmp/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner -Dsonar.projectKey=$SONAR_QUBE_PROJECT -Dsonar.sources=. -Dsonar.host.url=$SONAR_QUBE_URL -Dsonar.token=$SONAR_QUBE_KEY -Dsonar.java.binaries=target/classes > sonarqube_scanreport.json
+      - ./../../../../../../../tmp/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner -Dsonar.projectKey=$SONAR_QUBE_PROJECT -Dsonar.sources=. -Dsonar.host.url=$SONAR_QUBE_URL -Dsonar.token=$SONAR_QUBE_KEY > sonarqube_scanreport.json
   post_build:
     commands:
       - SCAN_RESULT=$(curl -o sonarqube_scanreport.json -u $SONAR_QUBE_KEY $SONAR_QUBE_URL/api/issues/search?createdAfter=2020-10-21&component=$SONAR_QUBE_PROJECT&severities=CRITICAL,BLOCKER&languages=java&types=VULNERABILITY&onComponentOnly=true)
