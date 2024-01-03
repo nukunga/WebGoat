@@ -2,8 +2,8 @@
 #cd /home/ubuntu/server/target/
 #java -jar webgoat-2023.6-SNAPSHOT.jar --server.port=8080 --server.address=13.125.55.184 
 
-
-BUILD_JAR=$(ls /home/ubuntu/server/target/*.jar)
+CURRENT_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+BUILD_JAR=$(ls /home/ubuntu/target/*.jar)
 JAR_NAME=$(basename "$BUILD_JAR")
 echo "> build 파일명: $JAR_NAME" >> /home/ubuntu/deploy.log
 
@@ -28,6 +28,6 @@ echo "> MONGO_URL:"
 echo "$MONGO_URL"
 echo "> run DEPLOY_JAR"    >> /home/ubuntu/deploy.log
 
-nohup java -jar "$DEPLOY_JAR" --server.port=8080 --server.address=3.35.175.197 > /dev/null 2> /dev/null < /dev/null &
+nohup java -jar "$DEPLOY_JAR" --server.port=8080 --server.address=$CURRENT_IP > /dev/null 2> /dev/null < /dev/null &
 
 #nohup java -jar "$DEPLOY_JAR" --server.port=8080 --server.address=13.125.55.184 &
