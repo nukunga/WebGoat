@@ -42,50 +42,29 @@ def process_message(event):
         # report_url = f"https://s3.console.aws.amazon.com/s3/object/{s3bucket}/{key}?region={region}"
                 
         ### OWASP SCA scanning report parsing
-        if event['reportType'] == 'OWASP-Dependency-Check':
-            severity = 50
-            FINDING_TITLE = "OWASP Dependency Check Analysis"
-            decoded_data = base64.b64decode(event)
-            decoded_event = json.loads(decoded_data)
+    if event and event.get('reportType') == 'OWASP-Dependency-Check':
+        logger.info("success sca test report parsing")
+        severity = 50
+        FINDING_TITLE = "OWASP Dependency Check Analysis"
+        dep_pkgs = len(event['report']['dependencies'])
+        for i in range(dep_pkgs):
+            if "packages" in event['report']['dependencies'][i]:
+                confidence = event['report']['dependencies'][i]['packages'][0]['confidence']
+                url = event['report']['dependencies'][i]['packages'][0]['url']
+                finding_id = f"{i}-{report_type.lower()}-{build_id}"
+                finding_description = f"Package: {event['report']['dependencies'][i]['packages'][0]['id']}, Confidence: {confidence}, URL: {url}"
+                created_at = datetime.now(timezone.utc).isoformat()
 
-            dep_pkgs = len(decoded_event['report']['dependencies'])
-            for i in range(dep_pkgs):
-                if "packages" in decoded_event['report']['dependencies'][i]:
-                    confidence = decoded_event['report']['dependencies'][i]['packages'][0]['confidence']
-                    url = decoded_event['report']['dependencies'][i]['packages'][0]['url']
-                    finding_id = f"{i}-{report_type.lower()}-{build_id}"
-                    finding_description = f"Package: {decoded_event['report']['dependencies'][i]['packages'][0]['id']}, Confidence: {confidence}, URL: {url}"
-                    created_at = datetime.now(timezone.utc).isoformat()
+                if confidence == "HIGHEST":
+                    normalized_severity = 80
+                else:
+                    normalized_severity = 50
 
-                    if confidence == "HIGHEST":
-                        normalized_severity = 80
-                    else:
-                        normalized_severity = 50
+                securityhub.import_finding_to_sh(i, account_id, region, created_at, source_repository, source_branch, source_commitid, build_id, report_url, finding_id, generator_id, normalized_severity, severity, finding_type, FINDING_TITLE, finding_description, BEST_PRACTICES_OWASP)
 
-                    securityhub.import_finding_to_sh(i, account_id, region, created_at, source_repository, source_branch, source_commitid, build_id, report_url, finding_id, generator_id, normalized_severity, severity, finding_type, FINDING_TITLE, finding_description, BEST_PRACTICES_OWASP)
 
-        ### PHPStan SAST scanning report parsing
-        if event['reportType'] == 'PHPStan':
-            severity = 50
-            FINDING_TITLE = "PHPStan StaticCode Analysis"
-            report_count = event['report']['totals']['file_errors']
-            for i in range(report_count):
-                for filename in event['report']['files']:
-                    finding_id = f"{i}-{report_type.lower()}-{build_id}"
-                    finding_description = f"Message: {event['report']['files'][filename]['messages'][0]['message']}, file: {filename}, line: {event['report']['files'][filename]['messages'][0]['line']}"
-                    created_at = datetime.now(timezone.utc).isoformat()
-                    normalized_severity = 60                   
-                    ### find the vulnerability severity level
-                    is_ignorable = f"{event['report']['files'][filename]['messages'][0]['ignorable']}"
-                    if is_ignorable == "true":
-                        normalized_severity = 30
-                    else:
-                        normalized_severity = 60
-                    ### Calling Securityhub function to post the findings
-                    securityhub.import_finding_to_sh(i, account_id, region, created_at, source_repository, source_branch, source_commitid, build_id, report_url, finding_id, generator_id, normalized_severity, severity, finding_type, FINDING_TITLE, finding_description, BEST_PRACTICES_OWASP)               
-        
         ### SonarQube SAST scanning report parsing
-        elif event['reportType'] == 'SONAR-QUBE':           
+        if event['reportType'] == 'SONAR-QUBE':           
             severity = 50
             FINDING_TITLE = "SonarQube StaticCode Analysis"         
             report_count = event['report']['total']

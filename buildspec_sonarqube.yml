@@ -24,12 +24,13 @@ phases:
         \"build_id\": env.CODEBUILD_BUILD_ID, \
         \"source_commitid\": env.CODEBUILD_RESOLVED_SOURCE_VERSION, \
         \"report\": . }" sonarqube_scanreport.json > payload.json
+      - base64 -w 0 payload.json > payload_base64.txt
       - "curl -s -u $SONAR_QUBE_KEY: $SONAR_QUBE_URL/api/qualitygates/project_status?projectKey=$SONAR_QUBE_PROJECT> /tmp/result.json"
       - if [ $(jq -r '.projectStatus.status' /tmp/result.json) = ERROR ] ; then 
           CODEBUILD_BUILD_SUCCEEDING=0 ; fi
       - |
         if ["$CODEBUILD_BUILD_SUCCEEDING" -eq 0  ]; then
-          aws lambda invoke --function-name ImportVulToSecurityHub --payload file://payload.json sonarqube_scan_report.json && echo "LAMBDA_SUCCEDED" || echo "LAMBDA_FAILED";
+          aws lambda invoke --function-name ImportVulToSecurityHub --payload file://payload_base64.txt sonarqube_scan_report.json && echo "LAMBDA_SUCCEDED" || echo "LAMBDA_FAILED";
           echo "in quality_status ERROR or WARN condition"
           exit 1;
         elif [ $(jq -r '.projectStatus.status' /tmp/result.json) = OK ]; then
