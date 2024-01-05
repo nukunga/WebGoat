@@ -7,6 +7,12 @@ target_sites = [
 
 
 for site_url in target_sites:
+    
+    # rm report file if exists
+    rm_file_command = [
+            "rm", "-f", f"/home/ec2-user/zap-scan-report.json",
+    ]
+    subprocess.run(rm_file_command)
 
     zap_command = [
         "/home/ec2-user/ZAP_2.14.0/zap.sh", "-cmd",
@@ -23,11 +29,4 @@ for site_url in target_sites:
             f"s3://zap-tbucket/Report/zap-scan-report.json",
     ]
     subprocess.run(s3_upload_command)
-
-    # rm report file
-    time.sleep(10)
-    rm_file_command = [
-            "rm", "-f", f"/home/ec2-user/zap-scan-report.json",
-    ]
-    subprocess.run(rm_file_command)
-
+    time.sleep(30)
