@@ -16,9 +16,9 @@ phases:
       - ./mvnw clean install
   post_build:
     commands:
-      - aws s3 cp ./target/webgoat-2023.6-SNAPSHOT.jar s3://whs-pipeline-from-iac20240103152950642400000001/whs-pipeline-from-Ia/
-      - aws s3 cp ./report.py s3://whs-pipeline-from-iac20240103152950642400000001/whs-pipeline-from-Ia/
-      - aws s3 cp ./install.py s3://whs-pipeline-from-iac20240103152950642400000001/whs-pipeline-from-Ia/
+      - aws s3 cp ./target/webgoat-2023.6-SNAPSHOT.jar s3://zap-tbucket/
+      - aws s3 cp ./report.py s3://zap-tbucket/
+      - aws s3 cp ./install.py s3://zap-tbucket/
       - echo Build completed on `date`
 artifacts:
   files:
