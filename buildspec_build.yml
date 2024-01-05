@@ -12,6 +12,7 @@ phases:
       - echo Build started on `date`
       - pwd && ls && whoami
       - mvn spotless:apply
+      - chmod +x mvnw
       - ./mvnw clean install
   post_build:
     commands:

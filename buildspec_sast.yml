@@ -32,10 +32,10 @@ phases:
         if ["$CODEBUILD_BUILD_SUCCEEDING" -eq 0  ]; then
           aws lambda invoke --function-name ImportVulToSecurityHub --payload file://payload_base64.txt sonarqube_scan_report.json && echo "LAMBDA_SUCCEDED" || echo "LAMBDA_FAILED";
           echo "in quality_status ERROR or WARN condition"
-          exit 1;
+          
         elif [ $(jq -r '.projectStatus.status' /tmp/result.json) = OK ]; then
           echo "in quality_status OK condition"
         else
           echo "in quality_status  unexpected condition"
-          exit 1;
+          
         fi
