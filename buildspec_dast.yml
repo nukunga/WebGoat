@@ -14,7 +14,7 @@ phases:
     commands:
       - instance_name="ZapTestInstance"
       - instance_id=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${instance_name}" --query "Reservations[0].Instances[0].InstanceId" --output text --region ap-northeast-2)
-      - aws ssm send-command --document-name "AWS-RunShellScript" --targets "Key=instanceids,Values=${instance_id}" --parameters "commands=['aws s3 cp s3://dast-hbucket/ZAP-build/target/webgoat-2023.6-SNAPSHOT.jar /home/ec2-user/webgoat-2023.6-SNAPSHOT.jar','aws s3 cp s3://dast-hbucket/report.py /home/ec2-user/report.py', 'aws s3 cp s3://dast-hbucket/install.py /home/ec2-user/install.py', 'sleep 50', 'python3 /home/ec2-user/install.py', 'sleep 50', 'sudo killall java', 'java -jar /home/ec2-user/webgoat-2023.6-SNAPSHOT.jar', 'sleep 50', 'python3 /home/ec2-user/report.py']" --region ap-northeast-2
+      - aws ssm send-command --document-name "AWS-RunShellScript" --targets "Key=instanceids,Values=${instance_id}" --parameters "commands=['aws s3 cp s3://whs-pipeline-from-iac20240103152950642400000001/whs-pipeline-from-Ia/BuildOutpu/target/webgoat-2023.6-SNAPSHOT.jar /home/ec2-user/webgoat-2023.6-SNAPSHOT.jar','aws s3 cp s3://whs-pipeline-from-iac20240103152950642400000001/whs-pipeline-from-Ia/BuildOutpu/report.py /home/ec2-user/report.py', 'aws s3 cp s3://whs-pipeline-from-iac20240103152950642400000001/whs-pipeline-from-Ia/BuildOutpu/install.py /home/ec2-user/install.py', 'sleep 50', 'python3 /home/ec2-user/install.py', 'sleep 50', 'sudo killall java', 'java -jar /home/ec2-user/webgoat-2023.6-SNAPSHOT.jar', 'sleep 50', 'python3 /home/ec2-user/report.py']" --region ap-northeast-2
       - sleep 300
       #s3에서 결과 파일 가져오기
       - aws s3 cp s3://zap-tbucket/Report/zap-scan-report.json $CODEBUILD_SRC_DIR
@@ -40,7 +40,7 @@ phases:
         \"source_commitid\": env.CODEBUILD_RESOLVED_SOURCE_VERSION, \
         \"high_alerts\": $high_alerts, \
         \"medium_alerts\": $medium_alerts, \
-        \"report\": . }" $CODEBUILD_SRC_DIR/payload.json
+        \"report\": . }" $CODEBUILD_SRC_DIR/zap-scan-report.json > payload.json
       - base64 -w 0 payload.json > payload_base64.txt
       - aws lambda invoke --function-name ImportVulToSecurityHub --payload file://$CODEBUILD_SRC_DIR/payload_base64.txt owaspzap_scan_report.json && echo "LAMBDA_SUCCEDED" || echo "LAMBDA_FAILED";
       - if [ $high_alerts -gt 0 ] || [ $medium_alerts -gt 0 ]; then echo "there are high or medium alerts.. failing the build" && exit 1; else exit 0; fi
