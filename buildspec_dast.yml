@@ -43,7 +43,7 @@ phases:
         \"report\": . }" $CODEBUILD_SRC_DIR/zap-scan-report.json > payload.json
       - base64 -w 0 payload.json > payload_base64.txt
       - aws lambda invoke --function-name ImportVulToSecurityHub --payload file://$CODEBUILD_SRC_DIR/payload_base64.txt owaspzap_scan_report.json && echo "LAMBDA_SUCCEDED" || echo "LAMBDA_FAILED";
-      - if [ $high_alerts -gt 0 ] || [ $medium_alerts -gt 0 ]; then echo "there are high or medium alerts.. failing the build"
+      - if [ $high_alerts -gt 0 ] || [ $medium_alerts -gt 0 ]; then echo "there are high or medium alerts.. failing the build";
       - echo Build completed on `date`
       #- |
       #  aws lambda invoke \
