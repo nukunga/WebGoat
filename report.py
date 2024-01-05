@@ -23,8 +23,9 @@ for site_url in target_sites:
             f"s3://zap-tbucket/Report/zap-scan-report.json",
     ]
     subprocess.run(s3_upload_command)
-    
-    time.sleep(360)
+
+    # rm report file
+    time.sleep(10)
     rm_file_command = [
             "rm", "-f", f"/home/ec2-user/zap-scan-report.json",
     ]
