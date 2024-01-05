@@ -3,7 +3,7 @@
 #java -jar webgoat-2023.6-SNAPSHOT.jar --server.port=8080 --server.address=13.125.55.184 
 
 CURRENT_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
-BUILD_JAR=$(ls /home/ubuntu/target/*.jar)
+BUILD_JAR=$(ls /home/ubuntu/*.jar)
 JAR_NAME=$(basename "$BUILD_JAR")
 echo "> build 파일명: $JAR_NAME" >> /home/ubuntu/deploy.log
 
