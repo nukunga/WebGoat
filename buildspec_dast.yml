@@ -2,7 +2,6 @@ version: 0.2
 phases:
   install:
     commands:
-      - yum -q install -y jq
       - echo "install phase....."
   pre_build:
     commands:
