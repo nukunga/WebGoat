@@ -19,7 +19,7 @@ phases:
 artifacts:
   files:
     - '**/*'
-  discard-paths: yes
+  discard-paths: no
     #- target/*.jar
     #- script/start.sh
     #- appspec.yml
